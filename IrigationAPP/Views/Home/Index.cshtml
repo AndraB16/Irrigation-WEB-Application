@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Http
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4 bold-text">Welcome</h1>
+    <h4 class="display-4 bold-text">Have a nice day! &#128516; </h4>
+</div>
+@if (Context.Session.GetString("IsLoggedIn") == "true")
+{
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-4">
+            <a class="btn btn-primary btn-block" asp-controller="ValveStates" asp-action="Index">Manual Control</a>
+        </div>
+    </div>
+    <div class="row mt-5 justify-content-center">
+        <div class="col-4">
+            <a class="btn btn-primary btn-block" asp-controller="Schedules" asp-action="Index">Schedule</a>
+        </div>
+    </div>
+    <div class="row mt-5 justify-content-center">
+        <div class="col-4">
+            <a class="btn btn-primary btn-block" asp-controller="IrrigationTimes" asp-action="Index">Automatic Control</a>
+        </div>
+    </div>
+</div>
+
+
+}

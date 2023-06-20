@@ -307,6 +307,44 @@ namespace IrigationAPP.Services.FuzzyLogicService
             }
         }
 
+        
+
+     /*   public double Defuzzify(Dictionary<string, double> outputValues)
+        {
+            List<double> maximaValues = new List<double>();
+            double highestMembership = 0;
+
+            for (double x = 0; x <= 10; x += 0.1)
+            {
+                foreach (var entry in outputValues)
+                {
+                    var set = GetFuzzySets("irigation_time").First(s => s.Name == entry.Key);
+                    double membership = Math.Min(entry.Value, set.GetMembershipDegree(x));
+
+                    if (membership > highestMembership)
+                    {
+                        highestMembership = membership;
+                        maximaValues.Clear();
+                        maximaValues.Add(x);
+                    }
+                    else if (membership == highestMembership)
+                    {
+                        maximaValues.Add(x);
+                    }
+                }
+            }
+
+            if (maximaValues.Count > 0)
+            {
+                // Calculate the average of maxima
+                return maximaValues.Average();
+            }
+            else
+            {
+                throw new Exception("No rules were triggered, defuzzification is not possible.");
+            }
+        }*/
+
         public async Task<double> DetermineIrigationTime()
         {
             var data = await TakeDataAsync();
@@ -327,6 +365,7 @@ namespace IrigationAPP.Services.FuzzyLogicService
             var irigationTime = Defuzzify(outputValues);
 
             return irigationTime;
+            
         }
 
 

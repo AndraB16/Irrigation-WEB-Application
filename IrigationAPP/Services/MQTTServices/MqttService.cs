@@ -38,37 +38,32 @@ namespace IrigationAPP.MQTTServices
             {
                 try
                 {
-                    // Assuming the message payload is a string
                     var payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
 
-                    // Debug: Print the received message
                     Console.WriteLine($"Received message: {payload}");
 
                     var parts = payload.Split(',');
-                    var collectorId = int.Parse(parts[0]); // Parse collector ID
+                    var collectorId = int.Parse(parts[0]);
                     var soilMoisturePercent = int.Parse(parts[1]);
 
-                    var dataRead = new DataRead // Change this to your model class name
+                    var dataRead = new DataRead 
                     {
                         collectorId = collectorId,
                         soilMoisturePercent = soilMoisturePercent,
-                        time = DateTime.UtcNow
+                        time = DateTime.Now
                     };
 
-                    // Use IServiceScopeFactory to create a new scope
                     using (var scope = _serviceScopeFactory.CreateScope())
                     {
                         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                        context.DataRead.Add(dataRead); // Change this to your DbSet name
+                        context.DataRead.Add(dataRead);
                         context.SaveChanges();
 
-                        // Debug: Print a message after saving changes
                         Console.WriteLine($"Saved data to database: {dataRead}");
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Debug: Print any exceptions
                     Console.WriteLine($"Exception while handling message: {ex}");
                 }
             });

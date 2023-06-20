@@ -19,103 +19,11 @@ namespace IrigationAPP.Controllers
             _context = context;
         }
 
-        // GET: DataReadAccuWeathers
         public async Task<IActionResult> Index()
         {
-            return View(await _context.DataReadAccuWeather.ToListAsync());
+            return View(await _context.DataReadAccuWeather.OrderByDescending(x => x.time).Take(20).ToListAsync());
         }
-
-        // GET: DataReadAccuWeathers/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var dataReadAccuWeather = await _context.DataReadAccuWeather
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (dataReadAccuWeather == null)
-            {
-                return NotFound();
-            }
-
-            return View(dataReadAccuWeather);
-        }
-
-        // GET: DataReadAccuWeathers/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: DataReadAccuWeathers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,temperature,rainProbability,time")] DataReadAccuWeather dataReadAccuWeather)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(dataReadAccuWeather);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(dataReadAccuWeather);
-        }
-
-        // GET: DataReadAccuWeathers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var dataReadAccuWeather = await _context.DataReadAccuWeather.FindAsync(id);
-            if (dataReadAccuWeather == null)
-            {
-                return NotFound();
-            }
-            return View(dataReadAccuWeather);
-        }
-
-        // POST: DataReadAccuWeathers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,temperature,rainProbability,time")] DataReadAccuWeather dataReadAccuWeather)
-        {
-            if (id != dataReadAccuWeather.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(dataReadAccuWeather);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DataReadAccuWeatherExists(dataReadAccuWeather.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(dataReadAccuWeather);
-        }
-
+      
         // GET: DataReadAccuWeathers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

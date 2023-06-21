@@ -22,8 +22,18 @@ namespace IrigationAPP.Controllers
         // GET: DataReads
         public async Task<IActionResult> Index()
         {
-            //return View(await _context.DataRead.ToListAsync());
-            return View(await _context.DataRead.OrderByDescending(x => x.time).Take(20).ToListAsync());
+            var dataReads = await _context.DataRead.OrderByDescending(x => x.time).Take(20).ToListAsync();
+            var totalCount = await _context.DataRead.CountAsync();
+
+            ViewData["TotalCount"] = totalCount;
+
+            return View(dataReads);
+        }
+
+
+        public async Task<IActionResult> Index2()
+        {
+            return View(await _context.DataRead.ToListAsync());
         }
 
         // GET: DataReads/Delete/5

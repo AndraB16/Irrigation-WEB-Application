@@ -32,7 +32,7 @@ namespace IrigationAPP.MQTTServices
                 .Build();
 
             await _mqttClient.StartAsync(options);
-            await _mqttClient.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("/andra/licenta/irig/out").Build());
+            await _mqttClient.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic("/collector/data").Build());
 
             _mqttClient.UseApplicationMessageReceivedHandler(e =>
             {

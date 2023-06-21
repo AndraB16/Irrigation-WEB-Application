@@ -40,42 +40,33 @@ namespace IrigationAPP.Controllers
         [HttpPost]
         public async Task<IActionResult> TurnOn(int id)
         {
-            // Create new ValveState with state set to 1
             var newValveState = new ValveState { ValveId = id, State = 1, Time = DateTime.Now };
 
             _context.ValveState.Add(newValveState);
             await _context.SaveChangesAsync();
 
-            // Create MQTT client
             var factory = new MqttFactory();
             var mqttClient = factory.CreateMqttClient();
 
-            // Configure MQTT client options
             var options = new MqttClientOptionsBuilder()
                 .WithClientId(Guid.NewGuid().ToString())
                 .WithTcpServer("broker.emqx.io")
                 .Build();
 
-            // Connect to MQTT broker
             await mqttClient.ConnectAsync(options, CancellationToken.None);
 
-            // Define the MQTT topic
-            string topic = "/andra/licenta/irig/in";
+            string topic = "/valve/status";
 
-            // Define the message payload
             string payload = newValveState.State.ToString();
 
-            // Create the MQTT message
             var message = new MqttApplicationMessageBuilder()
                 .WithTopic(topic)
                 .WithPayload(payload)
                 .WithExactlyOnceQoS()
                 .Build();
 
-            // Publish the message
             await mqttClient.PublishAsync(message, CancellationToken.None);
 
-            // Disconnect from MQTT broker
             await mqttClient.DisconnectAsync();
 
             return RedirectToAction(nameof(Index));
@@ -84,46 +75,36 @@ namespace IrigationAPP.Controllers
         [HttpPost]
         public async Task<IActionResult> TurnOff(int id)
         {
-            // Create new ValveState with state set to 0
             var newValveState = new ValveState { ValveId = id, State = 0, Time = DateTime.Now };
             _context.ValveState.Add(newValveState);
             await _context.SaveChangesAsync();
 
-            // Create MQTT client
             var factory = new MqttFactory();
             var mqttClient = factory.CreateMqttClient();
 
-            // Configure MQTT client options
             var options = new MqttClientOptionsBuilder()
                 .WithClientId(Guid.NewGuid().ToString())
                 .WithTcpServer("broker.emqx.io")
                 .Build();
 
-            // Connect to MQTT broker
             await mqttClient.ConnectAsync(options, CancellationToken.None);
 
-            // Define the MQTT topic
-            string topic = "/andra/licenta/irig/in";
+            string topic = "/valve/status";
 
-            // Define the message payload
             string payload = newValveState.State.ToString();
 
-            // Create the MQTT message
             var message = new MqttApplicationMessageBuilder()
                 .WithTopic(topic)
                 .WithPayload(payload)
                 .WithExactlyOnceQoS()
                 .Build();
 
-            // Publish the message
             await mqttClient.PublishAsync(message, CancellationToken.None);
 
-            // Disconnect from MQTT broker
             await mqttClient.DisconnectAsync();
 
             return RedirectToAction(nameof(Index));
         }
-
 
         private bool ValveStateExists(int id)
         {

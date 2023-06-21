@@ -1,14 +1,5 @@
 ﻿@model IEnumerable<IrigationAPP.Models.Schedule>
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h1>Schedule</h1>
-
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -49,7 +40,6 @@
             </tr>
         }
     </tbody>
-
+    
 </table>
-<p>Showing @Model.Count() of @ViewData["TotalCount"] entries</p>
-<a asp-action="Index2" class="btn btn-primary">View all Schedules</a>
+<a asp-action="Index" class="btn btn-primary"> Back </a>

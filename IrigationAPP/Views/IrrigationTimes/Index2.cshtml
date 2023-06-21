@@ -1,0 +1,36 @@
+﻿@model IEnumerable<IrigationAPP.Models.IrrigationTime>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Automatic Control</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Irrigation Time
+            </th>
+            <th>
+                Time
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.irrigationTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.time)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-action="Index" class="btn btn-primary">Back</a>

@@ -22,25 +22,19 @@ namespace IrigationAPP.Controllers
         // GET: Schedules
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Schedule.ToListAsync());
+            var schedules = await _context.Schedule.OrderByDescending(s => s.Id).Take(8).ToListAsync();
+            var totalCount = await _context.Schedule.CountAsync();
+
+            ViewData["TotalCount"] = totalCount;
+
+            return View(schedules);
         }
 
-        // GET: Schedules/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Index2()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var schedule = await _context.Schedule
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (schedule == null)
-            {
-                return NotFound();
-            }
+            return View(await _context.Schedule.ToListAsync());
 
-            return View(schedule);
         }
 
         // GET: Schedules/Create
@@ -49,73 +43,31 @@ namespace IrigationAPP.Controllers
             return View();
         }
 
-        // POST: Schedules/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ValveId,StartTime,StopTime,Status")] Schedule schedule)
         {
+            if (schedule.StartTime <= DateTime.Now)
+            {
+                ModelState.AddModelError("StartTime", "Start Time must be in the future.");
+            }
+
+            if (schedule.StopTime <= schedule.StartTime || schedule.StopTime > schedule.StartTime.AddHours(1))
+            {
+                ModelState.AddModelError("StopTime", "Stop Time must be no more than one hour later than Start Time.");
+            }
+
             if (ModelState.IsValid)
             {
-                //schedule.Status = "Waiting";
                 _context.Add(schedule);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(schedule);
         }
 
-        // GET: Schedules/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var schedule = await _context.Schedule.FindAsync(id);
-            if (schedule == null)
-            {
-                return NotFound();
-            }
-            return View(schedule);
-        }
-
-        // POST: Schedules/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ValveId,StartTime,StopTime,Status")] Schedule schedule)
-        {
-            if (id != schedule.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(schedule);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ScheduleExists(schedule.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(schedule);
-        }
+       
 
         // GET: Schedules/Delete/5
         public async Task<IActionResult> Delete(int? id)

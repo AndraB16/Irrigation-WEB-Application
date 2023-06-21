@@ -18,12 +18,21 @@ namespace IrigationAPP.Controllers
         {
             _context = context;
         }
-
         public async Task<IActionResult> Index()
         {
-            return View(await _context.DataReadAccuWeather.OrderByDescending(x => x.time).Take(20).ToListAsync());
+            var dataReadsAccu = await _context.DataReadAccuWeather.OrderByDescending(x => x.time).Take(20).ToListAsync();
+            var totalCount = await _context.DataReadAccuWeather.CountAsync();
+
+            ViewData["TotalCount"] = totalCount;
+
+            return View(dataReadsAccu);
         }
-      
+
+        public async Task<IActionResult> Index2()
+        {
+            return View(await _context.DataReadAccuWeather.ToListAsync());
+        }
+
         // GET: DataReadAccuWeathers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

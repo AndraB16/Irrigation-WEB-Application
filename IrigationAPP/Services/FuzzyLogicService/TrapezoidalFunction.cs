@@ -7,7 +7,6 @@ namespace IrigationAPP.Services.FuzzyLogicService
 {
     public class TrapezoidalFunction : MembershipFunction
     {
-        // Assuming a symmetric trapezoid for simplicity
         private readonly double a;
         private readonly double b;
 

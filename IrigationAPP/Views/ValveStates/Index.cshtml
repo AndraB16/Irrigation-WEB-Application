@@ -10,13 +10,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ValveId)
+                Valve Id
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.State)
+                State
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Time)
+                Time
             </th>
             <th></th>
         </tr>
@@ -29,7 +29,10 @@
                 @Html.DisplayFor(modelItem => item.ValveId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.State)
+                @{
+                    string displayState = item.State == 0 ? "OFF" : "ON";
+                }
+                @displayState
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Time)

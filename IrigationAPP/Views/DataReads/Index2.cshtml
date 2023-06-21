@@ -6,26 +6,6 @@
 
 <h1>Soil Moisture</h1>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<canvas id="myChart"></canvas>
-
-<script>
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: @Html.Raw(Json.Serialize(Model.Select(x => x.time.ToString()))),
-            datasets: [{
-                label: 'Soil Moisture Percent [%]',
-                data: @Html.Raw(Json.Serialize(Model.Select(x => x.soilMoisturePercent))),
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(0,0,0,0)',
-            }]
-        }
-    });
-</script>
-
 <table class="table">
     <thead>
         <tr>
@@ -61,5 +41,4 @@
         }
     </tbody>
 </table>
-<p>Showing @Model.Count() of @ViewData["TotalCount"] entries</p>
-<a asp-action="Index2" class="btn btn-primary">View all Data</a>
+<a asp-action="Index" class="btn btn-primary">Back</a>

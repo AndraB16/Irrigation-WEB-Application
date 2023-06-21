@@ -12,18 +12,17 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ValveId" class="control-label"></label>
+            <div class="form-group">              
                 <input asp-for="ValveId" class="form-control" value="1" type="hidden" />
                 <span asp-validation-for="ValveId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StartTime" class="control-label"></label>
+                <label class="control-label">Time to Start:</label>
                 <input asp-for="StartTime" class="form-control" />
                 <span asp-validation-for="StartTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="StopTime" class="control-label"></label>
+                <label class="control-label">Time to Stop:</label>
                 <input asp-for="StopTime" class="form-control" />
                 <span asp-validation-for="StopTime" class="text-danger"></span>
             </div>

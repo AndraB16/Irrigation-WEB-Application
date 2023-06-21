@@ -1,0 +1,28 @@
+﻿@model IEnumerable<IrigationAPP.Models.IrrigationTime>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Automatic Control</h1>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<canvas id="myChart"></canvas>
+
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: @Html.Raw(Json.Serialize(Model.Select(x => x.time.ToString()))),
+            datasets: [{
+                label: 'Irrigation Time [s]',
+                data: @Html.Raw(Json.Serialize(Model.Select(x => x.irrigationTime))),
+                borderColor: 'rgba(200, 102, 255, 1)',
+                backgroundColor: 'rgba(0,0,0,0)',
+            }]
+        }
+    });
+</script>
+<a asp-action="Index" class="btn btn-primary">Back</a>

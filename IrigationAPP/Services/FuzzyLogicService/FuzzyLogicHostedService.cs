@@ -1,66 +1,4 @@
-﻿/*using IrigationAPP.Data;
-using IrigationAPP.Models;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace IrigationAPP.Services.FuzzyLogicService
-{
-    public class FuzzyLogicHostedService : IHostedService
-    {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
-
-        public FuzzyLogicHostedService(IServiceScopeFactory serviceScopeFactory)
-        {
-            _serviceScopeFactory = serviceScopeFactory;
-        }
-
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            _ = ExecuteAsync(cancellationToken);
-
-            return Task.CompletedTask;
-        }
-
-        protected async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                using (var scope = _serviceScopeFactory.CreateScope())
-                {
-                    var fuzzyLogicService = scope.ServiceProvider.GetRequiredService<FuzzyLogicServices>();
-                    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-                    var irrigationTime = await fuzzyLogicService.DetermineIrigationTime();
-
-                    var newIrrigationTime = new IrrigationTime
-                    {
-                        time = DateTime.Now, 
-                        irrigationTime = irrigationTime
-                    };
-
-                    dbContext.IrrigationTime.Add(newIrrigationTime);
-                    await dbContext.SaveChangesAsync();
-                }
-
-                await Task.Delay(300000, stoppingToken);  
-            }
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-
-            return Task.CompletedTask;
-        }
-    }
-
-}*/
-
-using IrigationAPP.Data;
+﻿using IrigationAPP.Data;
 using IrigationAPP.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -85,16 +23,13 @@ namespace IrigationAPP.Services.FuzzyLogicService
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            // Crearea unui nou client MQTT
             var factory = new MqttFactory();
             mqttClient = factory.CreateMqttClient();
 
-            // Configurarea opțiunilor clientului MQTT
             var options = new MqttClientOptionsBuilder()
-                .WithTcpServer("broker.emqx.io", 1883) // Portul 1883 este portul standard pentru MQTT
+                .WithTcpServer("broker.emqx.io", 1883) 
                 .Build();
 
-            // Conectarea la broker
             await mqttClient.ConnectAsync(options);
 
             _ = ExecuteAsync(cancellationToken);
@@ -128,7 +63,6 @@ namespace IrigationAPP.Services.FuzzyLogicService
 
                     dbContext.ValveState.Add(newEntry);
 
-                    // Crearea unui nou mesaj MQTT
                     var message = new MqttApplicationMessageBuilder()
                         .WithTopic("/valve/status")
                         .WithPayload(newEntry.State.ToString())
@@ -136,12 +70,11 @@ namespace IrigationAPP.Services.FuzzyLogicService
                         .WithRetainFlag()
                         .Build();
 
-                    // Publicarea mesajului
                     await mqttClient.PublishAsync(message);
 
                     await dbContext.SaveChangesAsync();
 
-                    await Task.Delay((int)irrigationTime * 60 * 1000); // așteptăm timpul de irigație, convertit în milisecunde
+                    await Task.Delay((int)irrigationTime * 60 * 1000); 
 
                     newEntry = new ValveState
                     {
@@ -163,14 +96,13 @@ namespace IrigationAPP.Services.FuzzyLogicService
 
                     await dbContext.SaveChangesAsync();
 
-                    await Task.Delay(300000, stoppingToken); // așteptăm 5 minute înainte de a începe din nou
+                    await Task.Delay(10800000, stoppingToken); // așteptăm 3 ore
                 }
             }
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            // Deconectarea de la broker
             await mqttClient.DisconnectAsync();
         }
     }

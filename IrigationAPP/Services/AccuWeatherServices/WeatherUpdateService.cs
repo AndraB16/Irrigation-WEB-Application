@@ -28,8 +28,8 @@ namespace IrigationAPP.AccuWeatherServices
         {
             using (var scope = _scopeFactory.CreateScope())
             {
-             /*   var accuWeatherService = scope.ServiceProvider.GetRequiredService<AccuWeatherService>();
-                accuWeatherService.FetchDataAsync().Wait();*/
+                var accuWeatherService = scope.ServiceProvider.GetRequiredService<AccuWeatherService>();
+                accuWeatherService.FetchDataAsync().Wait();
             }
         }
 
